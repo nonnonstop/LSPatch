@@ -178,7 +178,7 @@ public class LSPApplication {
             var context = (Context) XposedHelpers.callStaticMethod(Class.forName("android.app.ContextImpl"), "createAppContext", activityThread, stubLoadedApk);
             if (config.appComponentFactory != null) {
                 try {
-                    context.getClassLoader().loadClass(config.appComponentFactory);
+                    appLoadedApk.getClassLoader().loadClass(config.appComponentFactory);
                 } catch (ClassNotFoundException e) { // This will happen on some strange shells like 360
                     Log.w(TAG, "Original AppComponentFactory not found: " + config.appComponentFactory);
                     appInfo.appComponentFactory = null;
