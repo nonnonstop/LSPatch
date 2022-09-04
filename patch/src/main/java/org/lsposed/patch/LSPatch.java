@@ -228,12 +228,18 @@ public class LSPatch {
                 throw new PatchError("Provided file is not a valid apk");
 
             // parse the app appComponentFactory full name from the manifest file
-            final String appComponentFactory;
+            String appComponentFactory;
             try (var is = manifestEntry.open()) {
                 var pair = ManifestParser.parseManifestFile(is);
                 if (pair == null)
                     throw new PatchError("Failed to parse AndroidManifest.xml");
                 appComponentFactory = pair.appComponentFactory;
+                if (appComponentFactory != null && !appComponentFactory.isEmpty()) {
+                    if (appComponentFactory.charAt(0) == '.')
+                        appComponentFactory = pair.packageName + appComponentFactory;
+                    else if (!appComponentFactory.contains("."))
+                        appComponentFactory = pair.packageName + "." + appComponentFactory;
+                }
                 logger.d("original appComponentFactory class: " + appComponentFactory);
             }
 
